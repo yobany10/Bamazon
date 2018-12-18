@@ -50,3 +50,23 @@ connection.connect(function(err) {
 	  	promptUserPurchase();
 	})
 }
+
+// promptUserPurchase will prompt the user for the item/quantity they would like to purchase //
+function promptUserPurchase () {
+// Prompt the user to select an item //
+inquirer
+.prompt([
+    {
+        name: 'id',
+        type: 'input',
+        message: 'Please enter the Item ID for the item you would like to purchase.',
+        filter: Number
+    },
+    {
+        name: 'quantity',
+        type: 'input',
+        message: 'How many do you want to purchase?',
+        filter: Number
+    }
+])
+}
