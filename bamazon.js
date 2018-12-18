@@ -5,20 +5,48 @@ var inquirer = require("inquirer");
 var connection = mysql.createConnection({
     host: "localhost",
   
-    // Your port; if not 3306
+    // Your port; if not 3306 //
     port: 3306,
   
-    // Your username
+    // Your username //
     user: "root",
   
-    // Your password
+    // Your password //
     password: process.env.MYSQL_PASSWORD,
     database: "bamazon_DB"
   });
 
-  // connect to the mysql server and sql database
+// Connect to the mysql server and sql database //
 connection.connect(function(err) {
     if (err) throw err;
-    // run the start function after the connection is made to prompt the user
-    start();
+    // Run the displayInventory function after the connection is made to prompt the user //
+    displayInventory();
   });
+  // DisplayInventory will retrieve the current inventory from the database and output it to the console //
+  function displayInventory () {
+    // Construct the database query string //
+    queryStr = 'SELECT * FROM products';
+    // Make DB query //
+    connection.query(queryStr, function(err, data) {
+		if (err) throw err;
+
+		console.log('\x1b[36m%s\x1b[0m', 'Existing Inventory: ');
+		console.log('...................\n');
+
+		var strOut = '';
+		for (var i = 0; i < data.length; i++) {
+			strOut = '';
+			strOut += 'Item ID: ' + data[i].id + '  //  ';
+			strOut += 'Product Name: ' + data[i].product_name + '  //  ';
+			strOut += 'Department: ' + data[i].department_name + '  //  ';
+			strOut += 'Price: $' + data[i].price + '\n';
+
+			console.log('\x1b[36m%s\x1b[0m',strOut);
+		}
+
+	  	console.log("---------------------------------------------------------------------\n");
+
+	  	//Prompt the user for item/quantity they would like to purchase //
+	  	promptUserPurchase();
+	})
+}
