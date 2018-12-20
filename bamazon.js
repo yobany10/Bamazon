@@ -71,7 +71,7 @@ inquirer
     {
         name: 'id',
         type: 'input',
-        message: 'Please enter the Item ID for the item you would like to purchase.',
+        message: 'Please enter the ID number for the item you would like to purchase.',
         validate: validateInput,
         filter: Number
     },
@@ -83,6 +83,8 @@ inquirer
         filter: Number
     }
 ]).then(function(input) {
+    console.log('Customer has selected: \n    id = '  + input.id + '\n    quantity = ' + input.quantity);
+
     var item = input.id;
     var quantity = input.quantity;
 
@@ -92,7 +94,7 @@ inquirer
     connection.query(queryStr, {id: item}, function(err, data) {
         if (err) throw err;
 
-        // If the user has selected an invalid item ID, data attay will be empty //
+        // If the user has selected an invalid item ID, data array will be empty //
         if (data.length === 0) {
             console.log('ERROR: Invalid Item ID. Please select a valid Item ID.');
             displayInventory();
@@ -101,11 +103,11 @@ inquirer
             var productData = data[0];
 
             // If the item requested by the user is in stock //
-            if (quantity <= productData.stockQuantity) {
+            if (quantity <= productData.stock_quantity) {
                 console.log('The item you have selected is in stock! Ordering now...');
 
                 // Construct the updating query string //
-                var updateQueryStr = 'UPDATE products SET stock_quantity = ' + (productData.stock_quantity - quantity) + ' WHERE item_id = ' + item;
+                var updateQueryStr = 'UPDATE products SET stock_quantity = ' + (productData.stock_quantity - quantity) + ' WHERE id = ' + item;
 
                 // Update the inventory //
                 connection.query(updateQueryStr, function(err, data) {
@@ -120,7 +122,7 @@ inquirer
                 })
             } else {
 
-                console.log('Sorry, there is not enough product in stock, your order can not be placed as is.');
+                console.log('Sorry, there is not enough product in stock, cancelling order...');
 				console.log('Please modify your order.');
 				console.log("\n---------------------------------------------------------------------\n");
 
