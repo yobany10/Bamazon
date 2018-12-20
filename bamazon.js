@@ -16,6 +16,18 @@ var connection = mysql.createConnection({
     database: "bamazon_DB"
   });
 
+  // validateInput makes sure that the user is supplying only positive integers for their inputs
+function validateInput(value) {
+	var integer = Number.isInteger(parseFloat(value));
+	var sign = Math.sign(value);
+
+	if (integer && (sign === 1)) {
+		return true;
+	} else {
+		return 'Please enter a whole non-zero number.';
+	}
+}
+
 // Connect to the mysql server and sql database //
 connection.connect(function(err) {
     if (err) throw err;
@@ -60,12 +72,14 @@ inquirer
         name: 'id',
         type: 'input',
         message: 'Please enter the Item ID for the item you would like to purchase.',
+        validate: validateInput,
         filter: Number
     },
     {
         name: 'quantity',
         type: 'input',
         message: 'How many do you want to purchase?',
+        validate: validateInput,
         filter: Number
     }
 ]).then(function(input) {
@@ -116,12 +130,3 @@ inquirer
     })
 })
 }
-
-// runBamazon will execute the main application logic
-function runBamazon() {
-	// Display the available inventory
-	displayInventory();
-}
-
-// Run the application logic
-runBamazon();
