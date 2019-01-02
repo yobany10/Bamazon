@@ -83,7 +83,7 @@ inquirer
         filter: Number
     }
 ]).then(function(input) {
-    console.log('Customer has selected: \n    id = '  + input.id + '\n    quantity = ' + input.quantity);
+    console.log('\x1b[36m%s\x1b[0m', 'Customer has selected: \n    id = '  + input.id + '\n    quantity = ' + input.quantity);
 
     var item = input.id;
     var quantity = input.quantity;
@@ -113,8 +113,8 @@ inquirer
                 connection.query(updateQueryStr, function(err, data) {
                     if(err) throw err;
 
-                    console.log('Your oder has been placed! Your total is $' + productData.price * quantity);
-					console.log('Thank you for shopping with us!');
+                    console.log('\x1b[33m%s\x1b[0m', 'Your oder has been placed! Your total is $' + productData.price * quantity);
+					console.log('\x1b[33m%s\x1b[0m','Thank you for shopping with us!');
                     console.log("\n---------------------------------------------------------------------\n");
                     
                 // End the database connection //
@@ -122,11 +122,12 @@ inquirer
                 })
             } else {
 
-                console.log('Sorry, there is not enough product in stock, cancelling order...');
-				console.log('Please modify your order.');
-				console.log("\n---------------------------------------------------------------------\n");
+                console.log('\x1b[31m%s\x1b[0m', 'Sorry, there is not enough product in stock. Cancelling order now...');
+				console.log('\x1b[31m%s\x1b[0m', 'Please modify your order.');
+                console.log("\n---------------------------------------------------------------------\n");
 
-				displayInventory();
+				// End the database connection //
+                connection.end();
             }
         }
     })
